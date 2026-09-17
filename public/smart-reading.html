@@ -1,0 +1,1809 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Smart Reading - Học tiếng Anh qua truyện đọc tương tác</title>
+  <style>
+    :root {
+      --bg-warm: #FAF8F5;
+      --card-bg: #FFFFFF;
+      --text-main: #1E293B;
+      --text-muted: #64748B;
+      --primary: #F59E0B;
+      --primary-hover: #D97706;
+      --primary-light: #FEF3C7;
+      --primary-border: #FCD34D;
+      --green-main: #10B981;
+      --green-hover: #059669;
+      --green-light: #D1FAE5;
+      --green-border: #6EE7B7;
+      --border-color: rgba(180, 83, 9, 0.15);
+      --font-serif: "Lora", "Georgia", "Cambria", "Times New Roman", serif;
+      --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-warm);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.5;
+    }
+
+    /* Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(250, 248, 245, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border-color);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+
+    .header-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      user-select: none;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #0F172A;
+      box-shadow: 0 2px 4px rgba(245, 158, 11, 0.25);
+    }
+
+    .brand-text h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #0F172A;
+      line-height: 1.2;
+    }
+
+    .brand-text p {
+      font-size: 0.7rem;
+      color: #78350F;
+      font-weight: 500;
+    }
+
+    .nav-tabs {
+      display: flex;
+      background: rgba(254, 243, 199, 0.7);
+      padding: 0.25rem;
+      border-radius: 12px;
+      border: 1px solid rgba(252, 211, 77, 0.6);
+      gap: 0.25rem;
+    }
+
+    .nav-btn {
+      border: none;
+      background: transparent;
+      padding: 0.45rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #475569;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all 0.15s ease;
+    }
+
+    .nav-btn.active {
+      background: #FFFFFF;
+      color: #0F172A;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .badge-count {
+      background: var(--primary);
+      color: #0F172A;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.1rem 0.4rem;
+      border-radius: 999px;
+      min-width: 18px;
+      text-align: center;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .icon-btn {
+      background: #FFFFFF;
+      border: 1px solid var(--primary-border);
+      border-radius: 8px;
+      padding: 0.45rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #475569;
+      transition: all 0.15s ease;
+    }
+
+    .icon-btn:hover {
+      background: var(--primary-light);
+      color: #0F172A;
+    }
+
+    /* Container */
+    main {
+      max-width: 860px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.25rem 1rem 5rem 1rem;
+      flex: 1;
+    }
+
+    /* Progress card */
+    .progress-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 0.85rem 1.15rem;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+
+    .progress-stats {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      font-size: 0.825rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-known {
+      color: var(--green-hover);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .stat-learning {
+      color: #B45309;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .stat-hint {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+    }
+
+    .progress-bar-track {
+      width: 100%;
+      height: 8px;
+      background: #E2E8F0;
+      border-radius: 999px;
+      overflow: hidden;
+      display: flex;
+    }
+
+    .bar-known {
+      background: var(--green-main);
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+
+    .bar-learning {
+      background: var(--primary);
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+
+    /* Story Card */
+    .story-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+      overflow: hidden;
+    }
+
+    .cover-container {
+      width: 100%;
+      height: 240px;
+      background: #FEF3C7;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cover-svg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .cover-badge-level {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(15, 23, 42, 0.85);
+      color: #FFFFFF;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      backdrop-filter: blur(4px);
+    }
+
+    .cover-badge-count {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(245, 158, 11, 0.95);
+      color: #0F172A;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      backdrop-filter: blur(4px);
+    }
+
+    .story-header {
+      padding: 1.5rem 1.75rem 1rem 1.75rem;
+      border-bottom: 1px solid rgba(180, 83, 9, 0.08);
+    }
+
+    .title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .title-row h2 {
+      font-family: var(--font-serif);
+      font-size: 1.65rem;
+      color: #0F172A;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 0.25rem;
+    }
+
+    .title-row p {
+      font-size: 0.9rem;
+      color: #78350F;
+      font-weight: 500;
+    }
+
+    .audio-btn {
+      background: var(--primary-light);
+      border: 1px solid var(--primary-border);
+      border-radius: 12px;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #78350F;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+    }
+
+    .audio-btn:hover {
+      background: var(--primary);
+      color: #0F172A;
+      transform: scale(1.04);
+    }
+
+    /* Keywords shelf */
+    .keywords-shelf {
+      margin-top: 1rem;
+      padding-top: 0.75rem;
+      border-top: 1px dashed rgba(180, 83, 9, 0.15);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .keywords-label {
+      font-size: 0.725rem;
+      font-weight: 700;
+      color: #92400E;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .kw-chip {
+      background: #FEF3C7;
+      color: #78350F;
+      border: 1px solid #FDE68A;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .kw-chip:hover {
+      background: var(--primary);
+      color: #0F172A;
+    }
+
+    .kw-chip.is-known {
+      background: #ECFDF5;
+      color: #065F46;
+      border-color: #A7F3D0;
+    }
+
+    .kw-chip.is-learning {
+      background: #FDE68A;
+      color: #451A03;
+      border-color: #F59E0B;
+      font-weight: 700;
+    }
+
+    /* Story Text Area */
+    .story-body {
+      padding: 1.5rem 1.75rem 2rem 1.75rem;
+    }
+
+    .instruction-callout {
+      background: rgba(254, 243, 199, 0.5);
+      border: 1px solid rgba(252, 211, 77, 0.6);
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.825rem;
+      color: #78350F;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .story-paragraph {
+      font-family: var(--font-serif);
+      font-size: 24px;
+      line-height: 2.3;
+      color: #1E293B;
+      margin-bottom: 1.75rem;
+      user-select: text;
+    }
+
+    /* Word token styles */
+    .word-token {
+      cursor: pointer;
+      display: inline-block;
+      padding: 0 0.15rem;
+      border-radius: 4px;
+      transition: background-color 0.15s ease, color 0.15s ease;
+      touch-action: manipulation;
+    }
+
+    .word-token:hover {
+      background-color: #F1F5F9;
+      color: #0F172A;
+    }
+
+    /* Keyword default: light yellow */
+    .word-token.is-keyword {
+      background-color: #FEF3C7;
+      color: #78350F;
+      border-bottom: 1px solid #FCD34D;
+    }
+
+    /* Learning word: highlighted light amber */
+    .word-token.is-learning {
+      background-color: #FEF08A;
+      color: #451A03;
+      font-weight: 600;
+      border-bottom: 2px solid #EAB308;
+    }
+
+    /* Known word: no heavy highlight */
+    .word-token.is-known {
+      background-color: transparent;
+      color: inherit;
+      border-bottom: none;
+    }
+    .word-token.is-known:hover {
+      background-color: #ECFDF5;
+      color: #065F46;
+    }
+
+    /* Active selected word */
+    .word-token.is-selected {
+      background-color: #FBBF24 !important;
+      color: #0F172A !important;
+      box-shadow: 0 0 0 2px #D97706;
+      font-weight: 600;
+    }
+
+    .para-speaker-btn {
+      background: rgba(254, 243, 199, 0.7);
+      border: 1px solid rgba(252, 211, 77, 0.8);
+      color: #78350F;
+      border-radius: 8px;
+      padding: 0.25rem 0.45rem;
+      margin-right: 0.5rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+      transition: all 0.15s ease;
+    }
+    .para-speaker-btn:hover {
+      background: var(--primary);
+      color: #0F172A;
+      transform: scale(1.05);
+    }
+
+    /* Vocabulary Popup */
+    .vocab-popup {
+      position: fixed;
+      z-index: 100;
+      width: calc(100vw - 32px);
+      max-width: 350px;
+      background: #FFFFFF;
+      border: 1px solid #FDE68A;
+      border-radius: 18px;
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.2);
+      padding: 1.15rem;
+      display: none;
+      animation: popIn 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .vocab-popup.active {
+      display: block;
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .popup-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.6rem;
+      gap: 0.5rem;
+    }
+
+    .popup-word-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #0F172A;
+      text-transform: capitalize;
+    }
+
+    .popup-ipa {
+      font-family: monospace;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #047857;
+      background: #ECFDF5;
+      padding: 0.1rem 0.4rem;
+      border-radius: 6px;
+      border: 1px solid #A7F3D0;
+      margin-top: 0.2rem;
+      display: inline-block;
+    }
+
+    .popup-actions-top {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .popup-audio-btn {
+      background: #FEF3C7;
+      border: 1px solid #FCD34D;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #78350F;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .popup-audio-btn:hover {
+      background: var(--primary);
+      color: #0F172A;
+      transform: scale(1.06);
+    }
+
+    .popup-close-btn {
+      background: transparent;
+      border: none;
+      color: #94A3B8;
+      cursor: pointer;
+      padding: 0.25rem;
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+
+    .popup-close-btn:hover {
+      color: #334155;
+    }
+
+    .popup-meaning-box {
+      background: rgba(254, 243, 199, 0.4);
+      border: 1px solid rgba(253, 230, 138, 0.7);
+      border-radius: 12px;
+      padding: 0.65rem 0.85rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .popup-meaning-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #92400E;
+      margin-bottom: 0.15rem;
+    }
+
+    .popup-meaning-text {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #1E293B;
+    }
+
+    .popup-example-box {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.75rem;
+      color: #475569;
+      margin-bottom: 0.85rem;
+    }
+
+    .popup-example-en {
+      font-style: italic;
+      color: #334155;
+      font-weight: 500;
+    }
+
+    .popup-buttons-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+
+    .btn-action {
+      border: none;
+      padding: 0.65rem 0.5rem;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      transition: all 0.15s ease;
+      touch-action: manipulation;
+    }
+
+    .btn-action:active {
+      transform: scale(0.97);
+    }
+
+    .btn-known {
+      background: var(--green-main);
+      color: #FFFFFF;
+      box-shadow: 0 2px 4px rgba(16, 185, 129, 0.25);
+    }
+
+    .btn-known:hover {
+      background: var(--green-hover);
+    }
+
+    .btn-learning {
+      background: var(--primary);
+      color: #0F172A;
+      box-shadow: 0 2px 4px rgba(245, 158, 11, 0.25);
+    }
+
+    .btn-learning:hover {
+      background: var(--primary-hover);
+    }
+
+    /* Vocabulary Page */
+    .vocab-page {
+      display: none;
+    }
+
+    .vocab-page.active {
+      display: block;
+    }
+
+    .vocab-header-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+
+    .vocab-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .vocab-title-row h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #0F172A;
+    }
+
+    .vocab-subtabs {
+      display: flex;
+      background: #FEF3C7;
+      padding: 0.25rem;
+      border-radius: 12px;
+      gap: 0.25rem;
+    }
+
+    .vocab-subtab-btn {
+      border: none;
+      background: transparent;
+      padding: 0.4rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #78350F;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .vocab-subtab-btn.active-subtab {
+      background: #FFFFFF;
+      color: #0F172A;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 0.65rem 1rem;
+      border-radius: 12px;
+      border: 1px solid #E2E8F0;
+      background: #F8FAFC;
+      font-size: 0.875rem;
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .search-input:focus {
+      background: #FFFFFF;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+    }
+
+    .vocab-grid {
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .vocab-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.15rem 1.35rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .vocab-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      transform: translateY(-1px);
+    }
+
+    .vocab-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.5rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .vocab-card-word {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #0F172A;
+      text-transform: capitalize;
+    }
+
+    .vocab-card-ipa {
+      font-family: monospace;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #047857;
+      background: #ECFDF5;
+      padding: 0.1rem 0.45rem;
+      border-radius: 6px;
+      border: 1px solid #A7F3D0;
+      margin-left: 0.5rem;
+      display: inline-block;
+    }
+
+    .card-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .card-listen-btn {
+      background: #FEF3C7;
+      border: 1px solid #FCD34D;
+      color: #78350F;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.4rem 0.75rem;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      transition: all 0.15s ease;
+    }
+
+    .card-listen-btn:hover {
+      background: var(--primary);
+      color: #0F172A;
+    }
+
+    .card-remember-btn {
+      background: var(--green-main);
+      border: none;
+      color: #FFFFFF;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.4rem 0.75rem;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      box-shadow: 0 1px 3px rgba(16, 185, 129, 0.25);
+      transition: all 0.15s ease;
+    }
+
+    .card-remember-btn:hover {
+      background: var(--green-hover);
+    }
+
+    .vocab-meaning-box {
+      background: rgba(254, 243, 199, 0.45);
+      border: 1px solid rgba(253, 230, 138, 0.6);
+      border-radius: 10px;
+      padding: 0.5rem 0.75rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #1E293B;
+    }
+
+    .vocab-example-box {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem;
+      color: #475569;
+    }
+
+    .vocab-empty {
+      background: #FFFFFF;
+      border: 2px dashed #FCD34D;
+      border-radius: 20px;
+      padding: 3rem 1.5rem;
+      text-align: center;
+      color: #64748B;
+    }
+
+    .vocab-empty h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #1E293B;
+      margin-bottom: 0.4rem;
+    }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #0F172A;
+      color: #FFFFFF;
+      padding: 0.65rem 1.25rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+      z-index: 200;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .story-paragraph {
+        font-size: 20px;
+        line-height: 2.1;
+      }
+      .story-header {
+        padding: 1.25rem 1rem 0.75rem 1rem;
+      }
+      .story-body {
+        padding: 1.25rem 1rem;
+      }
+      .title-row h2 {
+        font-size: 1.35rem;
+      }
+      .cover-container {
+        height: 180px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>Smart Reading</h1>
+          <p>Truyện đọc tiếng Anh tương tác</p>
+        </div>
+      </div>
+
+      <!-- Main tabs -->
+      <div class="nav-tabs">
+        <button id="btn-tab-reading" class="nav-btn active" onclick="switchMainTab('reading')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"></path></svg>
+          <span>Bài đọc</span>
+        </button>
+        <button id="btn-tab-vocab" class="nav-btn" onclick="switchMainTab('vocab')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"></path></svg>
+          <span>Từ của tôi</span>
+          <span id="badge-learning-count" class="badge-count">0</span>
+        </button>
+      </div>
+
+      <div class="header-actions">
+        <!-- TEST VOICE Button -->
+        <button id="btn-test-voice" type="button" class="icon-btn" onclick="speakEnglish('Hello. This is a voice test.')" style="background:#F59E0B; color:#0F172A; font-weight:700; font-size:0.75rem; padding:0.4rem 0.75rem; border-radius:10px; width:auto; height:auto; gap:0.35rem; display:flex; align-items:center; cursor:pointer;" title="Kiểm tra phát âm">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+          <span>TEST VOICE</span>
+        </button>
+        <!-- Audio speed toggle -->
+        <button id="btn-speed-toggle" class="icon-btn" onclick="toggleSpeechRate()" title="Tốc độ đọc">
+          <span id="label-speed" style="font-size: 0.75rem; font-weight: 700;">1.0x</span>
+        </button>
+        <!-- Reset data -->
+        <button class="icon-btn" onclick="confirmResetProgress()" title="Đặt lại dữ liệu">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Reading View -->
+    <div id="view-reading">
+      <!-- Progress Bar Card -->
+      <div class="progress-card">
+        <div class="progress-stats">
+          <div style="display:flex; gap:1rem;">
+            <div class="stat-known">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Đã biết: <strong id="stat-known-count">0</strong> từ</span>
+            </div>
+            <div class="stat-learning">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"></path></svg>
+              <span>Đang học: <strong id="stat-learning-count">0</strong> từ</span>
+            </div>
+          </div>
+          <div class="stat-hint">Chạm vào bất kỳ từ nào để nghe & tra nghĩa</div>
+        </div>
+        <div class="progress-bar-track">
+          <div id="bar-known-fill" class="bar-known" style="width: 0%;"></div>
+          <div id="bar-learning-fill" class="bar-learning" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <!-- Story Container -->
+      <article class="story-card">
+        <!-- SVG Story Illustration (100% Offline) -->
+        <div class="cover-container">
+          <svg class="cover-svg" viewBox="0 0 860 320" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#FEF3C7"/>
+                <stop offset="60%" stop-color="#FDE68A"/>
+                <stop offset="100%" stop-color="#E2E8F0"/>
+              </linearGradient>
+              <linearGradient id="treeGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#D97706"/>
+                <stop offset="100%" stop-color="#78350F"/>
+              </linearGradient>
+            </defs>
+            <rect width="860" height="320" fill="url(#sky)"/>
+            <!-- Rolling green hills -->
+            <path d="M0,260 Q220,190 440,240 T860,220 L860,320 L0,320 Z" fill="#BBF7D0" opacity="0.8"/>
+            <path d="M0,280 Q300,230 600,270 T860,250 L860,320 L0,320 Z" fill="#86EFAC" opacity="0.9"/>
+            <path d="M0,295 Q400,270 860,290 L860,320 L0,320 Z" fill="#4ADE80"/>
+            <!-- Ancient Oak Trunk -->
+            <path d="M430,120 C420,180 390,240 370,300 L490,300 C470,240 450,180 440,120 Z" fill="url(#treeGrad)"/>
+            <!-- Foliage Clouds -->
+            <circle cx="430" cy="110" r="85" fill="#F59E0B" opacity="0.9"/>
+            <circle cx="370" cy="130" r="65" fill="#FBBF24" opacity="0.95"/>
+            <circle cx="490" cy="125" r="70" fill="#F59E0B" opacity="0.9"/>
+            <circle cx="430" cy="70" r="60" fill="#FDE68A"/>
+            <!-- Open Book under tree -->
+            <path d="M410,280 Q430,275 450,280 L448,290 Q430,286 412,290 Z" fill="#FFFFFF"/>
+            <path d="M410,280 Q390,275 370,280 L372,290 Q390,286 408,290 Z" fill="#FFFFFF"/>
+            <!-- Warm sparkles -->
+            <circle cx="340" cy="90" r="3" fill="#FFFFFF"/>
+            <circle cx="510" cy="80" r="4" fill="#FFFFFF"/>
+            <circle cx="450" cy="45" r="3.5" fill="#FFFFFF"/>
+          </svg>
+          <div class="cover-badge-level">THCS / THPT (A2 - B1)</div>
+          <div class="cover-badge-count">189 từ</div>
+        </div>
+
+        <div class="story-header">
+          <div class="title-row">
+            <div>
+              <h2 id="story-title-text">The Secret of the Whispering Tree</h2>
+              <p>Bí mật của Cây cổ thụ biết thì thầm</p>
+            </div>
+            <button class="audio-btn" onclick="speakText('The Secret of the Whispering Tree')" title="Nghe tiêu đề">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+            </button>
+          </div>
+
+          <!-- Teacher Keywords Shelf -->
+          <div class="keywords-shelf">
+            <span class="keywords-label">Từ khóa gợi ý:</span>
+            <div id="keywords-chips-container" style="display:flex; gap:0.35rem; flex-wrap:wrap;"></div>
+          </div>
+        </div>
+
+        <div class="story-body">
+          <div class="instruction-callout">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            <span><strong>Hướng dẫn:</strong> Bấm hoặc chạm vào <strong>bất kỳ từ nào</strong> để nghe phát âm giọng chuẩn và xem nghĩa tiếng Việt. Chọn <strong>ĐÃ BIẾT</strong> hoặc <strong>HỌC</strong>.</span>
+          </div>
+
+          <!-- Interactive Text Container -->
+          <div id="story-paragraphs-container"></div>
+
+          <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #E2E8F0; text-align: center; font-size: 0.75rem; color: #94A3B8;">
+            — Kết thúc bài đọc &bull; Hãy mở tab <strong>Từ của tôi</strong> để ôn tập từ vựng đã lưu —
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <!-- My Vocabulary View -->
+    <div id="view-vocab" class="vocab-page">
+      <div class="vocab-header-card">
+        <div class="vocab-title-row">
+          <div>
+            <h2>My Vocabulary — Từ của tôi</h2>
+            <p style="font-size: 0.8rem; color: #64748B;">Ôn tập các từ vựng bạn đã lưu trong bài đọc</p>
+          </div>
+          <div class="vocab-subtabs">
+            <button id="subtab-btn-learning" class="vocab-subtab-btn active-subtab" onclick="switchVocabSubTab('learning')">
+              Đang học (<span id="subtab-learning-count">0</span>)
+            </button>
+            <button id="subtab-btn-known" class="vocab-subtab-btn" onclick="switchVocabSubTab('known')">
+              Đã nhớ (<span id="subtab-known-count">0</span>)
+            </button>
+          </div>
+        </div>
+        <input type="text" id="vocab-search-box" class="search-input" placeholder="Tìm kiếm từ vựng..." oninput="renderVocabList()">
+      </div>
+
+      <div id="vocab-cards-grid" class="vocab-grid"></div>
+    </div>
+  </main>
+
+  <!-- Interactive Vocabulary Popup -->
+  <div id="vocab-popup" class="vocab-popup">
+    <div class="popup-top">
+      <div>
+        <div id="popup-word" class="popup-word-title">Word</div>
+        <div id="popup-ipa" class="popup-ipa">/ipa/</div>
+      </div>
+      <div class="popup-actions-top">
+        <button id="popup-btn-speak" class="popup-audio-btn" title="Nghe phát âm">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+        </button>
+        <button class="popup-close-btn" onclick="closePopup()">&times;</button>
+      </div>
+    </div>
+
+    <div class="popup-meaning-box">
+      <div class="popup-meaning-label">Nghĩa tiếng Việt</div>
+      <div id="popup-meaning" class="popup-meaning-text">Nghĩa của từ</div>
+    </div>
+
+    <div id="popup-example-wrap" class="popup-example-box">
+      <div id="popup-example-en" class="popup-example-en">"Example sentence goes here."</div>
+      <div id="popup-example-vi" style="color: #64748B; margin-top: 0.15rem;">Bản dịch câu ví dụ.</div>
+    </div>
+
+    <div class="popup-buttons-grid">
+      <button class="btn-action btn-known" onclick="onPopupMarkKnown()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        <span>ĐÃ BIẾT</span>
+      </button>
+      <button class="btn-action btn-learning" onclick="onPopupMarkLearning()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"></path></svg>
+        <span>HỌC</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast message -->
+  <div id="toast" class="toast">
+    <span id="toast-text">Thông báo</span>
+  </div>
+
+  <script>
+    /* =========================================================================
+       1. STORY DATA & COMPREHENSIVE DICTIONARY (100% OFFLINE)
+       ========================================================================= */
+    const STORY_PARAGRAPHS = [
+      "Long ago, in a peaceful green valley, a young student named Nam felt discouraged. Every morning, he tried hard to read his English book, but the grammar looked confusing and the sentences felt too long.",
+      "One sunny afternoon, Nam walked into the quiet forest and sat under an ancient oak tree. The gentle wind moved through the branches, and a soft voice whispered in his ears. To his surprise, the old tree spoke kindly.",
+      "\"Learning a language is like planting a seed,\" the oak explained. \"You must be patient and water it every day. Do not worry about reading quickly. Turn each page slowly, and collect new words like precious golden treasures.\"",
+      "\"How can I remember everything?\" Nam asked softly, holding his notebook tightly with both hands.",
+      "The tree smiled warmly. \"The secret is courage and practice. Practice a little each morning, speak with confidence, and never give up when you make a mistake. The most important journey of your life always begins with one small step.\"",
+      "Nam smiled with relief. He opened his notebook, wrote down the new advice, and discovered that learning was no longer scary, but a wonderful adventure."
+    ];
+
+    const STORY_KEYWORDS = [
+      "tried", "slowly", "words", "remember", "important",
+      "journey", "patient", "whispered", "courage", "discovered"
+    ];
+
+    const DICTIONARY = {
+      tried: { ipa: "/traɪd/", vi: "đã cố gắng, đã nỗ lực, đã thử", en: "Nam tried hard to read his English book every morning.", en_vi: "Nam đã cố gắng hết sức để đọc cuốn sách tiếng Anh.", isKw: true },
+      slowly: { ipa: "/ˈsloʊ.li/", vi: "một cách chậm rãi, từ tốn", en: "Turn each page slowly to understand every sentence.", en_vi: "Lật từng trang thật chậm rãi để hiểu từng câu.", isKw: true },
+      words: { ipa: "/wɜːrdz/", vi: "những từ ngữ, từ vựng", en: "Collect new words like precious golden treasures.", en_vi: "Thu thập các từ mới như những kho báu vàng quý giá.", isKw: true },
+      remember: { ipa: "/rɪˈmem.bɚ/", vi: "ghi nhớ, nhớ lại", en: "How can I remember everything I read?", en_vi: "Làm thế nào để em có thể ghi nhớ tất cả những gì mình đọc?", isKw: true },
+      important: { ipa: "/ɪmˈpɔːr.tənt/", vi: "quan trọng, thiết yếu", en: "The most important journey begins with one small step.", en_vi: "Hành trình quan trọng nhất bắt đầu từ một bước đi nhỏ.", isKw: true },
+      journey: { ipa: "/ˈdʒɝː.ni/", vi: "hành trình, chặng đường", en: "Learning English is a long but exciting journey.", en_vi: "Học tiếng Anh là một hành trình dài đầy thú vị.", isKw: true },
+      patient: { ipa: "/ˈpeɪ.ʃənt/", vi: "kiên nhẫn, nhẫn nại", en: "You must be patient and water the seed every day.", en_vi: "Em phải kiên nhẫn và tưới nước cho hạt giống mỗi ngày.", isKw: true },
+      whispered: { ipa: "/ˈwɪs.pɚd/", vi: "đã thì thầm, nói nhỏ nhẹ", en: "A gentle voice whispered in his ears.", en_vi: "Một giọng nói êm dịu đã thì thầm bên tai cậu.", isKw: true },
+      courage: { ipa: "/ˈkɝː.ɪdʒ/", vi: "lòng dũng cảm, sự can đảm", en: "The secret is courage and daily practice.", en_vi: "Bí quyết chính là lòng dũng cảm và việc rèn luyện mỗi ngày.", isKw: true },
+      discovered: { ipa: "/dɪˈskʌv.ɚd/", vi: "đã khám phá ra, đã nhận ra", en: "Nam discovered that learning was a wonderful adventure.", en_vi: "Nam khám phá ra rằng việc học là một chuyến phiêu lưu tuyệt vời.", isKw: true },
+      long: { ipa: "/lɑːŋ/", vi: "xa xưa, lâu dài, dài", en: "Long ago, a young boy lived in a valley.", en_vi: "Cách đây rất lâu, một cậu bé sống trong thung lũng." },
+      ago: { ipa: "/əˈɡoʊ/", vi: "trước đây, cách đây", en: "Two years ago, he began learning.", en_vi: "Hai năm trước, cậu bắt đầu học." },
+      in: { ipa: "/ɪn/", vi: "ở trong, tại", en: "He sat in a peaceful garden.", en_vi: "Cậu ngồi trong một khu vườn yên bình." },
+      a: { ipa: "/ə/", vi: "một (mạo từ)", en: "A young student sat quietly.", en_vi: "Một học sinh trẻ ngồi im lặng." },
+      peaceful: { ipa: "/ˈpiːs.fəl/", vi: "thanh bình, yên ả", en: "The valley was peaceful in the morning.", en_vi: "Thung lũng rất thanh bình vào buổi sớm mai." },
+      green: { ipa: "/ɡriːn/", vi: "xanh lá cây, xanh tươi", en: "The hill was covered in green grass.", en_vi: "Ngọn đồi phủ đầy cỏ xanh tươi." },
+      valley: { ipa: "/ˈvæl.i/", vi: "thung lũng", en: "Rivers flow through the valley.", en_vi: "Những dòng sông chảy qua thung lũng." },
+      young: { ipa: "/jʌŋ/", vi: "trẻ tuổi, thanh thiếu niên", en: "The young student wanted to learn.", en_vi: "Học sinh trẻ tuổi muốn học hỏi." },
+      student: { ipa: "/ˈstuː.dənt/", vi: "học sinh, sinh viên", en: "Every student can succeed.", en_vi: "Mỗi học sinh đều có thể thành công." },
+      named: { ipa: "/neɪmd/", vi: "có tên là", en: "A boy named Nam read the story.", en_vi: "Một cậu bé tên Nam đã đọc câu chuyện." },
+      nam: { ipa: "/nɑːm/", vi: "Nam (tên riêng)", en: "Nam smiled with relief.", en_vi: "Nam mỉm cười nhẹ nhõm." },
+      felt: { ipa: "/felt/", vi: "đã cảm thấy (quá khứ của feel)", en: "He felt happy after finishing.", en_vi: "Cậu cảm thấy vui sau khi hoàn thành." },
+      discouraged: { ipa: "/dɪˈskɝː.ɪdʒd/", vi: "nản lòng, mất tinh thần", en: "Do not feel discouraged by mistakes.", en_vi: "Đừng nản lòng bởi những lỗi sai." },
+      every: { ipa: "/ˈev.ri/", vi: "mỗi, mọi", en: "Practice reading every day.", en_vi: "Rèn luyện đọc sách mỗi ngày." },
+      morning: { ipa: "/ˈmɔːr.nɪŋ/", vi: "buổi sáng", en: "Morning is a great time to study.", en_vi: "Buổi sáng là thời gian tuyệt vời để học." },
+      he: { ipa: "/hiː/", vi: "cậu ấy, anh ấy", en: "He opened his favorite book.", en_vi: "Cậu mở cuốn sách yêu thích của mình." },
+      hard: { ipa: "/hɑːrd/", vi: "chăm chỉ, vất vả, khó", en: "He worked hard to improve.", en_vi: "Cậu học chăm chỉ để tiến bộ." },
+      to: { ipa: "/tuː/", vi: "để, tới, hướng về", en: "He tried to read the book.", en_vi: "Cậu cố gắng đọc cuốn sách." },
+      read: { ipa: "/riːd/", vi: "đọc", en: "Read books to expand knowledge.", en_vi: "Đọc sách để mở rộng tri thức." },
+      his: { ipa: "/hɪz/", vi: "của cậu ấy", en: "He carried his notebook.", en_vi: "Cậu mang theo quyển vở của mình." },
+      english: { ipa: "/ˈɪŋ.ɡlɪʃ/", vi: "tiếng Anh, môn tiếng Anh", en: "English is a global language.", en_vi: "Tiếng Anh là một ngôn ngữ toàn cầu." },
+      book: { ipa: "/bʊk/", vi: "quyển sách", en: "This book is very interesting.", en_vi: "Quyển sách này rất thú vị." },
+      but: { ipa: "/bʌt/", vi: "nhưng", en: "It was hard, but he kept trying.", en_vi: "Thật khó, nhưng cậu tiếp tục cố gắng." },
+      the: { ipa: "/ðə/", vi: "cái, người (xác định)", en: "The sun shone brightly.", en_vi: "Mặt trời chiếu sáng rực rỡ." },
+      grammar: { ipa: "/ˈɡræm.ɚ/", vi: "ngữ pháp", en: "Grammar helps us write clearly.", en_vi: "Ngữ pháp giúp chúng ta viết rõ ràng." },
+      looked: { ipa: "/lʊkt/", vi: "trông có vẻ, đã nhìn", en: "The rules looked confusing.", en_vi: "Các quy tắc trông có vẻ khó hiểu." },
+      confusing: { ipa: "/kənˈfjuː.zɪŋ/", vi: "rối rắm, khó hiểu", en: "The puzzle was confusing.", en_vi: "Câu đố rất rắc rối." },
+      and: { ipa: "/ænd/", vi: "và", en: "Books and stories inspire us.", en_vi: "Sách và truyện truyền cảm hứng cho chúng ta." },
+      sentences: { ipa: "/ˈsen.tən.sɪz/", vi: "những câu văn", en: "Read short sentences first.", en_vi: "Hãy đọc những câu ngắn trước." },
+      too: { ipa: "/tuː/", vi: "quá, cũng", en: "The sentences were too long.", en_vi: "Những câu văn quá dài." },
+      one: { ipa: "/wʌn/", vi: "một (ngày nọ)", en: "One day, he met a wise friend.", en_vi: "Một ngày nọ, cậu gặp một người bạn thông thái." },
+      sunny: { ipa: "/ˈsʌn.i/", vi: "có nắng, ngập tràn ánh nắng", en: "It was a sunny afternoon.", en_vi: "Đó là một buổi chiều nắng đẹp." },
+      afternoon: { ipa: "/ˌæf.tɚˈnuːn/", vi: "buổi chiều", en: "We read stories in the afternoon.", en_vi: "Chúng tôi đọc truyện vào buổi chiều." },
+      walked: { ipa: "/wɑːkt/", vi: "đã đi bộ", en: "He walked into the forest.", en_vi: "Cậu đi bộ vào trong khu rừng." },
+      into: { ipa: "/ˈɪn.tuː/", vi: "vào trong", en: "He walked into the room.", en_vi: "Cậu bước vào phòng." },
+      quiet: { ipa: "/ˈkwaɪ.ət/", vi: "yên tĩnh, tĩnh lặng", en: "The library is very quiet.", en_vi: "Thư viện rất yên tĩnh." },
+      forest: { ipa: "/ˈfɔːr.ɪst/", vi: "khu rừng", en: "Birds sang in the forest.", en_vi: "Chim hót trong khu rừng." },
+      sat: { ipa: "/sæt/", vi: "đã ngồi (quá khứ của sit)", en: "He sat under the tree.", en_vi: "Cậu ngồi dưới gốc cây." },
+      under: { ipa: "/ˈʌn.dɚ/", vi: "ở dưới, dưới bóng", en: "Rest under the shade.", en_vi: "Nghỉ ngơi dưới bóng mát." },
+      ancient: { ipa: "/ˈeɪn.ʃənt/", vi: "cổ xưa, lâu đời", en: "The ancient tree stood tall.", en_vi: "Cây cổ thụ đứng sừng sững." },
+      oak: { ipa: "/oʊk/", vi: "cây sồi", en: "An oak tree lived for centuries.", en_vi: "Một cây sồi sống qua nhiều thế kỷ." },
+      tree: { ipa: "/triː/", vi: "cái cây", en: "Leaves fell from the tree.", en_vi: "Những chiếc lá rơi từ trên cây." },
+      gentle: { ipa: "/ˈdʒen.təl/", vi: "nhẹ nhàng, êm dịu", en: "A gentle breeze was blowing.", en_vi: "Một làn gió nhẹ đang thổi." },
+      wind: { ipa: "/wɪnd/", vi: "cơn gió", en: "The wind rustled the leaves.", en_vi: "Gió xào xạc trên những tán lá." },
+      moved: { ipa: "/muːvd/", vi: "đã lay động, di chuyển", en: "The branches moved softly.", en_vi: "Các cành cây đung đưa nhẹ nhàng." },
+      through: { ipa: "/θruː/", vi: "xuyên qua", en: "Light shone through the window.", en_vi: "Ánh sáng chiếu xuyên qua cửa sổ." },
+      branches: { ipa: "/ˈbræn.tʃɪz/", vi: "những cành cây", en: "Birds rested on the branches.", en_vi: "Chim đậu trên những cành cây." },
+      soft: { ipa: "/sɑːft/", vi: "nhỏ nhẹ, êm dịu", en: "She spoke with a soft voice.", en_vi: "Cô ấy nói bằng giọng nhỏ nhẹ." },
+      voice: { ipa: "/vɔɪs/", vi: "tiếng nói, giọng nói", en: "He recognized the voice.", en_vi: "Cậu nhận ra giọng nói đó." },
+      ears: { ipa: "/ɪrz/", vi: "đôi tai", en: "The music sounded good to his ears.", en_vi: "Âm nhạc nghe thật êm tai." },
+      surprise: { ipa: "/sɚˈpraɪz/", vi: "sự ngạc nhiên, bất ngờ", en: "To his surprise, the tree spoke.", en_vi: "Trước sự ngạc nhiên của cậu, cái cây đã cất tiếng." },
+      old: { ipa: "/oʊld/", vi: "già, cổ", en: "The old oak tree gave advice.", en_vi: "Cây sồi già trao lời khuyên." },
+      spoke: { ipa: "/spoʊk/", vi: "đã nói (quá khứ của speak)", en: "The teacher spoke clearly.", en_vi: "Thầy giáo nói rất rõ ràng." },
+      kindly: { ipa: "/ˈkaɪnd.li/", vi: "ân cần, tử tế", en: "She smiled kindly at him.", en_vi: "Cô ấy mỉm cười ân cần với cậu." },
+      learning: { ipa: "/ˈlɝː.nɪŋ/", vi: "việc học tập", en: "Learning is a lifelong process.", en_vi: "Học tập là một quá trình suốt đời." },
+      language: { ipa: "/ˈlæŋ.ɡwɪdʒ/", vi: "ngôn ngữ", en: "English is a useful language.", en_vi: "Tiếng Anh là một ngôn ngữ hữu ích." },
+      is: { ipa: "/ɪz/", vi: "là, thì", en: "Reading is fun.", en_vi: "Đọc sách rất thú vị." },
+      like: { ipa: "/laɪk/", vi: "như, giống như", en: "Life is like a journey.", en_vi: "Cuộc sống giống như một hành trình." },
+      planting: { ipa: "/ˈplæn.tɪŋ/", vi: "việc gieo trồng", en: "Planting a seed takes care.", en_vi: "Gieo hạt cần sự chăm sóc." },
+      seed: { ipa: "/siːd/", vi: "hạt giống, hạt mầm", en: "A small seed grows into a tree.", en_vi: "Một hạt mầm nhỏ lớn thành cái cây." },
+      explained: { ipa: "/ɪkˈspleɪnd/", vi: "đã giải thích", en: "He explained the meaning.", en_vi: "Cậu ấy đã giải thích ý nghĩa." },
+      you: { ipa: "/juː/", vi: "bạn, em", en: "You can do this.", en_vi: "Em có thể làm được điều này." },
+      must: { ipa: "/mʌst/", vi: "phải, cần phải", en: "You must practice daily.", en_vi: "Em cần phải luyện tập mỗi ngày." },
+      be: { ipa: "/biː/", vi: "trở nên, hãy là", en: "Be patient with yourself.", en_vi: "Hãy kiên nhẫn với chính mình." },
+      water: { ipa: "/ˈwɑː.t̬ɚ/", vi: "tưới nước", en: "Remember to water the plants.", en_vi: "Nhớ tưới nước cho cây." },
+      it: { ipa: "/ɪt/", vi: "nó", en: "Water it every day.", en_vi: "Hãy tưới nó mỗi ngày." },
+      day: { ipa: "/deɪ/", vi: "ngày", en: "Each day brings new words.", en_vi: "Mỗi ngày mang đến những từ mới." },
+      do: { ipa: "/duː/", vi: "làm, trợ động từ", en: "Do not rush.", en_vi: "Đừng vội vàng." },
+      not: { ipa: "/nɑːt/", vi: "không", en: "Do not give up.", en_vi: "Đừng từ bỏ." },
+      worry: { ipa: "/ˈwɝː.i/", vi: "lo lắng", en: "Do not worry about mistakes.", en_vi: "Đừng lo lắng về lỗi sai." },
+      about: { ipa: "/əˈbaʊt/", vi: "về", en: "Think about this lesson.", en_vi: "Hãy nghĩ về bài học này." },
+      reading: { ipa: "/ˈriː.dɪŋ/", vi: "việc đọc", en: "Reading stories is enjoyable.", en_vi: "Đọc truyện rất thú vị." },
+      quickly: { ipa: "/ˈkwɪk.li/", vi: "nhanh chóng", en: "Do not read too quickly.", en_vi: "Đừng đọc quá nhanh." },
+      turn: { ipa: "/tɝːn/", vi: "lật (trang)", en: "Turn the page carefully.", en_vi: "Lật trang cẩn thận." },
+      each: { ipa: "/iːtʃ/", vi: "mỗi, từng", en: "Notice each new word.", en_vi: "Hãy chú ý đến từng từ mới." },
+      page: { ipa: "/peɪdʒ/", vi: "trang sách", en: "Read one page at a time.", en_vi: "Đọc từng trang một." },
+      collect: { ipa: "/kəˈlekt/", vi: "thu thập, sưu tầm", en: "Collect vocabulary in your book.", en_vi: "Sưu tầm từ vựng vào vở của em." },
+      new: { ipa: "/nuː/", vi: "mới", en: "Learn a new word today.", en_vi: "Học một từ mới hôm nay." },
+      precious: { ipa: "/ˈpreʃ.əs/", vi: "quý giá, quý báu", en: "Time is precious.", en_vi: "Thời gian là quý báu." },
+      golden: { ipa: "/ˈɡoʊl.dən/", vi: "bằng vàng, rực rỡ", en: "Golden leaves fell down.", en_vi: "Những chiếc lá vàng rơi xuống." },
+      treasures: { ipa: "/ˈtreʒ.ɚz/", vi: "kho báu", en: "Books hold great treasures.", en_vi: "Sách chứa đựng những kho báu tuyệt vời." },
+      how: { ipa: "/haʊ/", vi: "như thế nào", en: "How can I remember?", en_vi: "Làm thế nào em nhớ được?" },
+      can: { ipa: "/kæn/", vi: "có thể", en: "You can do it.", en_vi: "Em có thể làm được." },
+      i: { ipa: "/aɪ/", vi: "tôi, em", en: "I want to speak English.", en_vi: "Em muốn nói tiếng Anh." },
+      everything: { ipa: "/ˈev.ri.θɪŋ/", vi: "mọi thứ, tất cả", en: "Understand everything step by step.", en_vi: "Hiểu mọi thứ từng bước một." },
+      asked: { ipa: "/æskt/", vi: "đã hỏi", en: "Nam asked a question.", en_vi: "Nam đã hỏi một câu hỏi." },
+      softly: { ipa: "/ˈsɑːft.li/", vi: "nhẹ nhàng, khẽ", en: "He spoke softly.", en_vi: "Cậu nói khẽ." },
+      holding: { ipa: "/ˈhoʊl.dɪŋ/", vi: "đang cầm, đang ôm", en: "Holding his notebook tightly.", en_vi: "Ôm chặt quyển vở của mình." },
+      notebook: { ipa: "/ˈnoʊt.bʊk/", vi: "quyển sổ tay", en: "Write words in your notebook.", en_vi: "Ghi từ vựng vào sổ tay." },
+      tightly: { ipa: "/ˈtaɪt.li/", vi: "chặt chẽ", en: "Hold the book tightly.", en_vi: "Cầm chặt cuốn sách." },
+      with: { ipa: "/wɪð/", vi: "với, bằng", en: "Practice with courage.", en_vi: "Luyện tập với lòng can đảm." },
+      both: { ipa: "/boʊθ/", vi: "cả hai", en: "He held it with both hands.", en_vi: "Cậu cầm nó bằng cả hai tay." },
+      hands: { ipa: "/hændz/", vi: "đôi bàn tay", en: "Clap your hands.", en_vi: "Hãy vỗ tay." },
+      smiled: { ipa: "/smaɪld/", vi: "đã mỉm cười", en: "The tree smiled kindly.", en_vi: "Cái cây mỉm cười ân cần." },
+      warmly: { ipa: "/ˈwɔːrm.li/", vi: "ấm áp", en: "He greeted warmly.", en_vi: "Cậu chào đón ấm áp." },
+      secret: { ipa: "/ˈsiː.krət/", vi: "bí mật, bí quyết", en: "The secret to success is patience.", en_vi: "Bí quyết thành công là sự kiên nhẫn." },
+      practice: { ipa: "/ˈpræk.tɪs/", vi: "rèn luyện, sự luyện tập", en: "Practice makes perfect.", en_vi: "Có công mài sắt có ngày nên kim." },
+      little: { ipa: "/ˈlɪt̬.əl/", vi: "một chút, nhỏ", en: "A little progress every day.", en_vi: "Một chút tiến bộ mỗi ngày." },
+      speak: { ipa: "/spiːk/", vi: "nói", en: "Speak with confidence.", en_vi: "Hãy nói với sự tự tin." },
+      confidence: { ipa: "/ˈkɑːn.fə.dəns/", vi: "sự tự tin", en: "Confidence grows with practice.", en_vi: "Sự tự tin lớn dần qua rèn luyện." },
+      never: { ipa: "/ˈnev.ɚ/", vi: "không bao giờ", en: "Never give up.", en_vi: "Đừng bao giờ từ bỏ." },
+      give: { ipa: "/ɡɪv/", vi: "cho, đưa", en: "Never give up.", en_vi: "Đừng bao giờ từ bỏ." },
+      up: { ipa: "/ʌp/", vi: "lên (give up: từ bỏ)", en: "Do not give up your dream.", en_vi: "Đừng từ bỏ ước mơ của em." },
+      when: { ipa: "/wen/", vi: "khi", en: "Keep going when it is hard.", en_vi: "Hãy tiếp bước khi gặp khó khăn." },
+      make: { ipa: "/meɪk/", vi: "làm, mắc (lỗi)", en: "It is okay to make mistakes.", en_vi: "Mắc lỗi là điều bình thường." },
+      mistake: { ipa: "/mɪˈsteɪk/", vi: "lỗi sai, sai lầm", en: "Learn from each mistake.", en_vi: "Học hỏi từ mỗi sai lầm." },
+      most: { ipa: "/moʊst/", vi: "nhất, quan trọng nhất", en: "This is the most important lesson.", en_vi: "Đây là bài học quan trọng nhất." },
+      of: { ipa: "/əv/", vi: "của", en: "The joy of learning.", en_vi: "Niềm vui của việc học." },
+      your: { ipa: "/jʊr/", vi: "của bạn, của em", en: "Your effort will be rewarded.", en_vi: "Nỗ lực của em sẽ được đền đáp." },
+      life: { ipa: "/laɪf/", vi: "cuộc sống, cuộc đời", en: "Learning shapes your life.", en_vi: "Học tập định hình cuộc đời em." },
+      always: { ipa: "/ˈɑːl.weɪz/", vi: "luôn luôn", en: "Always keep a curious mind.", en_vi: "Hãy luôn giữ một tâm trí tò mò." },
+      begins: { ipa: "/bɪˈɡɪnz/", vi: "bắt đầu", en: "Every journey begins with a step.", en_vi: "Mỗi hành trình đều bắt đầu từ một bước đi." },
+      small: { ipa: "/smɑːl/", vi: "nhỏ bé", en: "Take small steps every day.", en_vi: "Thực hiện những bước nhỏ mỗi ngày." },
+      step: { ipa: "/step/", vi: "bước đi, bước chân", en: "The first step is courage.", en_vi: "Bước đầu tiên là lòng dũng cảm." },
+      relief: { ipa: "/rɪˈliːf/", vi: "sự nhẹ nhõm", en: "He felt relief after finishing.", en_vi: "Cậu cảm thấy nhẹ nhõm sau khi xong." },
+      opened: { ipa: "/ˈoʊ.pənd/", vi: "đã mở ra", en: "He opened his notebook.", en_vi: "Cậu mở cuốn sổ tay." },
+      wrote: { ipa: "/roʊt/", vi: "đã viết", en: "He wrote down the advice.", en_vi: "Cậu đã ghi lại lời khuyên." },
+      down: { ipa: "/daʊn/", vi: "xuống (write down: ghi lại)", en: "Write down new vocabulary.", en_vi: "Hãy ghi lại những từ mới." },
+      advice: { ipa: "/ədˈvaɪs/", vi: "lời khuyên", en: "Good advice is helpful.", en_vi: "Lời khuyên tốt rất hữu ích." },
+      was: { ipa: "/wɑːz/", vi: "đã là, đã ở", en: "The story was inspiring.", en_vi: "Câu chuyện thật truyền cảm hứng." },
+      no: { ipa: "/noʊ/", vi: "không (no longer: không còn)", en: "It was no longer difficult.", en_vi: "Nó không còn khó khăn nữa." },
+      longer: { ipa: "/ˈlɑːŋ.ɡɚ/", vi: "lâu hơn (no longer: không còn nữa)", en: "He was no longer afraid.", en_vi: "Cậu không còn sợ hãi nữa." },
+      scary: { ipa: "/ˈsker.i/", vi: "đáng sợ", en: "English is not scary.", en_vi: "Tiếng Anh không hề đáng sợ." },
+      wonderful: { ipa: "/ˈwʌn.dɚ.fəl/", vi: "tuyệt vời, kỳ diệu", en: "A wonderful experience.", en_vi: "Một trải nghiệm tuyệt vời." },
+      adventure: { ipa: "/ədˈven.tʃɚ/", vi: "cuộc phiêu lưu", en: "Reading is a great adventure.", en_vi: "Đọc sách là một cuộc phiêu lưu tuyệt vời." }
+    };
+
+    function cleanWord(str) {
+      return str.replace(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/g, '').trim();
+    }
+
+    function lookupWord(raw) {
+      const cleaned = cleanWord(raw);
+      const lower = cleaned.toLowerCase();
+      if (DICTIONARY[lower]) {
+        return { word: cleaned, ...DICTIONARY[lower] };
+      }
+      return {
+        word: cleaned,
+        ipa: `/${lower}/`,
+        vi: `Từ vựng tiếng Anh: ${cleaned}`,
+        en: `Practice remembering the word "${cleaned}".`,
+        en_vi: `Hãy rèn luyện ghi nhớ từ "${cleaned}".`,
+        isKw: false
+      };
+    }
+
+    /* =========================================================================
+       2. PERSISTENCE & LOCALSTORAGE (100% OFFLINE)
+       ========================================================================= */
+    const STORAGE_KEY_KNOWN = 'smart_reading_known_words_v2';
+    const STORAGE_KEY_LEARNING = 'smart_reading_learning_words_v2';
+    const STORAGE_KEY_SPEED = 'smart_reading_speed_v2';
+
+    let knownWords = [];
+    let learningWords = [];
+    let speechRate = 0.9;
+    let selectedWordObj = null;
+    let currentVocabSubTab = 'learning';
+
+    function loadState() {
+      try {
+        const k = localStorage.getItem(STORAGE_KEY_KNOWN);
+        const l = localStorage.getItem(STORAGE_KEY_LEARNING);
+        const s = localStorage.getItem(STORAGE_KEY_SPEED);
+        if (k) knownWords = JSON.parse(k);
+        if (l) learningWords = JSON.parse(l);
+        if (s) speechRate = parseFloat(s);
+      } catch (e) {
+        console.warn('Storage read error', e);
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY_KNOWN, JSON.stringify(knownWords));
+        localStorage.setItem(STORAGE_KEY_LEARNING, JSON.stringify(learningWords));
+        localStorage.setItem(STORAGE_KEY_SPEED, speechRate.toString());
+      } catch (e) {
+        console.warn('Storage save error', e);
+      }
+      updateUIStats();
+    }
+
+    function confirmResetProgress() {
+      if (confirm('Bạn có muốn đặt lại toàn bộ tiến độ học từ vựng không?')) {
+        knownWords = [];
+        learningWords = [];
+        saveState();
+        renderStory();
+        renderKeywordsShelf();
+        renderVocabList();
+        showToast('Đã đặt lại tiến độ học tập!');
+      }
+    }
+
+    /* =========================================================================
+       3. AUDIO PRONUNCIATION (WEB SPEECH API SYNTHESIS)
+       ========================================================================= */
+    const cleanWord = (word) =>
+      word.replace(/^[^A-Za-z']+|[^A-Za-z']+$/g, "");
+
+    let activeUtterance = null;
+
+    function initSpeechSynthesis() {
+      if ('speechSynthesis' in window) {
+        const loadVoices = () => {
+          const voices = window.speechSynthesis.getVoices();
+          console.log("Available voices:", voices);
+        };
+        loadVoices();
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+      }
+    }
+    initSpeechSynthesis();
+
+    function speakEnglish(text, rate = speechRate) {
+      if (!text || !text.trim()) return;
+
+      const exists = ('speechSynthesis' in window);
+      console.log("whether speechSynthesis exists:", exists);
+
+      if (!exists) {
+        console.error("Speech synthesis is not supported.");
+        alert("Trình duyệt không hỗ trợ Web Speech API.");
+        return;
+      }
+
+      const textToSpeak = text.includes(' ') ? text.trim() : cleanWord(text);
+      if (!textToSpeak) return;
+
+      console.log("text being spoken:", textToSpeak);
+
+      try {
+        if (window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
+        }
+        window.speechSynthesis.cancel();
+
+        const utterance = new SpeechSynthesisUtterance(textToSpeak);
+        utterance.lang = "en-US";
+        utterance.rate = rate;
+        utterance.pitch = 1;
+        utterance.volume = 1;
+
+        const voices = window.speechSynthesis.getVoices() || [];
+        console.log("number of available voices:", voices.length);
+
+        const englishVoice =
+          voices.find(v => v.lang === "en-US") ||
+          voices.find(v => v.lang === "en-GB") ||
+          voices.find(v => v.lang?.toLowerCase().startsWith("en"));
+
+        console.log("selected voice:", englishVoice ? `${englishVoice.name} (${englishVoice.lang})` : "browser default");
+
+        if (englishVoice) {
+          utterance.voice = englishVoice;
+        }
+
+        utterance.onerror = (event) => {
+          console.error("speech error:", event);
+          activeUtterance = null;
+        };
+
+        utterance.onstart = () => {
+          console.log("speech start:", textToSpeak);
+        };
+
+        utterance.onend = () => {
+          console.log("speech end:", textToSpeak);
+          activeUtterance = null;
+        };
+
+        activeUtterance = utterance;
+        window.speechSynthesis.speak(utterance);
+
+        if (window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
+        }
+      } catch (err) {
+        console.error("speech error:", err);
+      }
+    }
+
+    function speakText(text) {
+      speakEnglish(text, speechRate);
+    }
+
+    function toggleSpeechRate() {
+      speechRate = speechRate === 0.9 ? 0.75 : 0.9;
+      document.getElementById('label-speed').innerText = speechRate === 0.9 ? '1.0x' : '0.8x';
+      saveState();
+      showToast(`Tốc độ đọc: ${speechRate === 0.9 ? 'Chuẩn (1.0x)' : 'Chậm (0.8x)'}`);
+    }
+
+    /* =========================================================================
+       4. STORY RENDERING & WORD INTERACTION
+       ========================================================================= */
+    function renderStory() {
+      const container = document.getElementById('story-paragraphs-container');
+      container.innerHTML = '';
+
+      STORIES_TOKENIZED.forEach((pTokens, pIndex) => {
+        const pEl = document.createElement('p');
+        pEl.className = 'story-paragraph';
+
+        // Full sentence speaker for paragraph
+        const speakBtn = document.createElement('button');
+        speakBtn.type = 'button';
+        speakBtn.className = 'para-speaker-btn';
+        speakBtn.title = 'Nghe toàn bộ câu / đoạn này';
+        speakBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>`;
+        speakBtn.onclick = (e) => {
+          e.stopPropagation();
+          speakEnglish(STORY_PARAGRAPHS[pIndex]);
+        };
+        pEl.appendChild(speakBtn);
+
+        pTokens.forEach((token, tIndex) => {
+          const cleaned = cleanWord(token);
+          const isWord = /^[a-zA-Z0-9]/.test(token) && cleaned.length > 0;
+
+          if (!isWord) {
+            const span = document.createElement('span');
+            span.textContent = token;
+            pEl.appendChild(span);
+            return;
+          }
+
+          const lower = cleaned.toLowerCase();
+          const isKnown = knownWords.includes(lower);
+          const isLearning = learningWords.includes(lower);
+          const isKw = STORY_KEYWORDS.includes(lower);
+
+          const wordSpan = document.createElement('span');
+          wordSpan.textContent = token;
+          wordSpan.className = 'word-token';
+          wordSpan.dataset.word = cleaned;
+
+          if (isLearning) {
+            wordSpan.classList.add('is-learning');
+          } else if (isKw && !isKnown) {
+            wordSpan.classList.add('is-keyword');
+          } else if (isKnown) {
+            wordSpan.classList.add('is-known');
+          }
+
+          // Handle click & touch
+          const handleActivation = (e) => {
+            e.stopPropagation();
+            onWordSelected(cleaned, wordSpan);
+          };
+
+          wordSpan.addEventListener('click', handleActivation);
+          pEl.appendChild(wordSpan);
+        });
+
+        container.appendChild(pEl);
+      });
+    }
+
+    // Tokenize paragraphs upfront
+    const STORIES_TOKENIZED = STORY_PARAGRAPHS.map(p => {
+      return p.split(/([a-zA-Z0-9]+(?:['’][a-zA-Z0-9]+)?)/g);
+    });
+
+    function renderKeywordsShelf() {
+      const shelf = document.getElementById('keywords-chips-container');
+      shelf.innerHTML = '';
+
+      STORY_KEYWORDS.forEach(kw => {
+        const lower = kw.toLowerCase();
+        const btn = document.createElement('button');
+        btn.className = 'kw-chip';
+        btn.textContent = kw;
+
+        if (learningWords.includes(lower)) {
+          btn.classList.add('is-learning');
+        } else if (knownWords.includes(lower)) {
+          btn.classList.add('is-known');
+        }
+
+        btn.addEventListener('click', () => {
+          // Find first matching word span in story to position popup
+          const el = document.querySelector(`.word-token[data-word="${kw}"]`) || btn;
+          onWordSelected(kw, el);
+        });
+
+        shelf.appendChild(btn);
+      });
+    }
+
+    /* =========================================================================
+       5. POPUP LOGIC & ACTIONS
+       ========================================================================= */
+    const popupEl = document.getElementById('vocab-popup');
+    let activeTokenElement = null;
+
+    function onWordSelected(wordStr, element) {
+      if (activeTokenElement) {
+        activeTokenElement.classList.remove('is-selected');
+      }
+      activeTokenElement = element;
+      if (element.classList && element.classList.contains('word-token')) {
+        element.classList.add('is-selected');
+      }
+
+      const detail = lookupWord(wordStr);
+      selectedWordObj = detail;
+
+      // Speak word immediately
+      speakText(detail.word);
+
+      // Populate popup UI
+      document.getElementById('popup-word').innerText = detail.word;
+      document.getElementById('popup-ipa').innerText = detail.ipa;
+      document.getElementById('popup-meaning').innerText = detail.vi;
+
+      const exWrap = document.getElementById('popup-example-wrap');
+      if (detail.en) {
+        exWrap.style.display = 'block';
+        document.getElementById('popup-example-en').innerText = `"${detail.en}"`;
+        document.getElementById('popup-example-vi').innerText = detail.en_vi || '';
+      } else {
+        exWrap.style.display = 'none';
+      }
+
+      document.getElementById('popup-btn-speak').onclick = (e) => {
+        if (e) e.stopPropagation();
+        speakEnglish(detail.word);
+      };
+
+      // Position popup smartly near the element
+      const rect = element.getBoundingClientRect();
+      const popupWidth = Math.min(350, window.innerWidth - 32);
+      const popupHeight = 280;
+
+      let left = rect.left + (rect.width / 2) - (popupWidth / 2);
+      if (left < 16) left = 16;
+      if (left + popupWidth > window.innerWidth - 16) {
+        left = window.innerWidth - popupWidth - 16;
+      }
+
+      const spaceBelow = window.innerHeight - rect.bottom;
+      let top;
+      if (spaceBelow < popupHeight && rect.top > popupHeight) {
+        top = rect.top - popupHeight - 12;
+      } else {
+        top = rect.bottom + 12;
+      }
+
+      if (top < 16) top = 16;
+      if (top + popupHeight > window.innerHeight - 16) {
+        top = window.innerHeight - popupHeight - 16;
+      }
+
+      popupEl.style.left = `${left}px`;
+      popupEl.style.top = `${top}px`;
+      popupEl.classList.add('active');
+    }
+
+    function closePopup() {
+      popupEl.classList.remove('active');
+      if (activeTokenElement) {
+        activeTokenElement.classList.remove('is-selected');
+        activeTokenElement = null;
+      }
+      selectedWordObj = null;
+    }
+
+    function onPopupMarkKnown() {
+      if (!selectedWordObj) return;
+      const lower = selectedWordObj.word.toLowerCase();
+
+      if (!knownWords.includes(lower)) {
+        knownWords.push(lower);
+      }
+      learningWords = learningWords.filter(w => w !== lower);
+
+      saveState();
+      renderStory();
+      renderKeywordsShelf();
+      renderVocabList();
+      closePopup();
+      showToast(`Đã lưu "${selectedWordObj.word}" vào danh sách ĐÃ BIẾT`);
+    }
+
+    function onPopupMarkLearning() {
+      if (!selectedWordObj) return;
+      const lower = selectedWordObj.word.toLowerCase();
+
+      if (!learningWords.includes(lower)) {
+        learningWords.push(lower);
+      }
+      knownWords = knownWords.filter(w => w !== lower);
+
+      saveState();
+      renderStory();
+      renderKeywordsShelf();
+      renderVocabList();
+      closePopup();
+      showToast(`Đã thêm "${selectedWordObj.word}" vào mục "Từ của tôi"`);
+    }
+
+    // Close on clicking outside
+    document.addEventListener('mousedown', (e) => {
+      if (!popupEl.contains(e.target) && !e.target.closest('.word-token') && !e.target.closest('.kw-chip')) {
+        closePopup();
+      }
+    });
+    document.addEventListener('touchstart', (e) => {
+      if (!popupEl.contains(e.target) && !e.target.closest('.word-token') && !e.target.closest('.kw-chip')) {
+        closePopup();
+      }
+    }, { passive: true });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closePopup();
+    });
+
+    /* =========================================================================
+       6. MY VOCABULARY VIEW
+       ========================================================================= */
+    function switchVocabSubTab(subTab) {
+      currentVocabSubTab = subTab;
+      document.getElementById('subtab-btn-learning').classList.toggle('active-subtab', subTab === 'learning');
+      document.getElementById('subtab-btn-known').classList.toggle('active-subtab', subTab === 'known');
+      renderVocabList();
+    }
+
+    function renderVocabList() {
+      const grid = document.getElementById('vocab-cards-grid');
+      const search = (document.getElementById('vocab-search-box').value || '').toLowerCase().trim();
+      const list = currentVocabSubTab === 'learning' ? learningWords : knownWords;
+
+      const filtered = list.filter(w => w.includes(search));
+
+      document.getElementById('subtab-learning-count').innerText = learningWords.length;
+      document.getElementById('subtab-known-count').innerText = knownWords.length;
+      document.getElementById('badge-learning-count').innerText = learningWords.length;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="vocab-empty">
+            <h3>${currentVocabSubTab === 'learning' ? 'Chưa có từ nào trong danh sách Đang học' : 'Chưa có từ nào được chuyển sang Đã nhớ'}</h3>
+            <p style="font-size: 0.85rem; max-width: 420px; margin: 0 auto 1.25rem auto;">
+              Khi đọc truyện, hãy chạm vào bất kỳ từ nào bạn muốn rèn luyện và bấm <strong>HỌC</strong>.
+            </p>
+            <button class="nav-btn active" style="margin: 0 auto;" onclick="switchMainTab('reading')">Quay lại bài đọc</button>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = '';
+      filtered.forEach(wordStr => {
+        const detail = lookupWord(wordStr);
+        const card = document.createElement('div');
+        card.className = 'vocab-card';
+
+        card.innerHTML = `
+          <div class="vocab-card-top">
+            <div>
+              <span class="vocab-card-word">${detail.word}</span>
+              <span class="vocab-card-ipa">${detail.ipa}</span>
+            </div>
+            <div class="card-actions">
+              <button class="card-listen-btn" onclick="speakText('${detail.word}')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                <span>Listen</span>
+              </button>
+              ${currentVocabSubTab === 'learning' ? `
+                <button class="card-remember-btn" onclick="markCardRemembered('${detail.word}')">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>ĐÃ NHỚ</span>
+                </button>
+              ` : ''}
+            </div>
+          </div>
+          <div class="vocab-meaning-box">${detail.vi}</div>
+          ${detail.en ? `
+            <div class="vocab-example-box">
+              <div style="font-style: italic; color: #334155;">"${detail.en}"</div>
+              <div style="color: #64748B; margin-top: 0.15rem;">${detail.en_vi || ''}</div>
+            </div>
+          ` : ''}
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function markCardRemembered(wordStr) {
+      const lower = wordStr.toLowerCase();
+      learningWords = learningWords.filter(w => w !== lower);
+      if (!knownWords.includes(lower)) {
+        knownWords.push(lower);
+      }
+      saveState();
+      renderStory();
+      renderKeywordsShelf();
+      renderVocabList();
+      showToast(`Tuyệt vời! "${wordStr}" đã chuyển sang ĐÃ NHỚ`);
+    }
+
+    /* =========================================================================
+       7. UI NAVIGATION & STATS
+       ========================================================================= */
+    function switchMainTab(tab) {
+      closePopup();
+      const isReading = tab === 'reading';
+      document.getElementById('view-reading').style.display = isReading ? 'block' : 'none';
+      document.getElementById('view-vocab').style.display = isReading ? 'none' : 'block';
+      document.getElementById('btn-tab-reading').classList.toggle('active', isReading);
+      document.getElementById('btn-tab-vocab').classList.toggle('active', !isReading);
+
+      if (!isReading) {
+        renderVocabList();
+      }
+    }
+
+    function updateUIStats() {
+      const kCount = knownWords.length;
+      const lCount = learningWords.length;
+      const totalStoryWords = 189;
+
+      document.getElementById('stat-known-count').innerText = kCount;
+      document.getElementById('stat-learning-count').innerText = lCount;
+      document.getElementById('badge-learning-count').innerText = lCount;
+
+      const kPct = Math.min(100, (kCount / totalStoryWords) * 100);
+      const lPct = Math.min(100, (lCount / totalStoryWords) * 100);
+
+      document.getElementById('bar-known-fill').style.width = `${kPct}%`;
+      document.getElementById('bar-learning-fill').style.width = `${lPct}%`;
+    }
+
+    let toastTimeout;
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-text').innerText = msg;
+      toast.classList.add('show');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2400);
+    }
+
+    // Initialize application on load
+    window.addEventListener('DOMContentLoaded', () => {
+      loadState();
+      renderStory();
+      renderKeywordsShelf();
+      updateUIStats();
+      document.getElementById('label-speed').innerText = speechRate === 0.9 ? '1.0x' : '0.8x';
+    });
+  </script>
+</body>
+</html>

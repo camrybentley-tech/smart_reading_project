@@ -1,0 +1,10 @@
+{
+  "name": "Smart Reading",
+  "description": "Ứng dụng đọc truyện tiếng Anh tương tác dành cho học sinh Việt Nam, tra từ tức thì và ôn luyện từ vựng.",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
